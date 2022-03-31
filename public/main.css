@@ -1,0 +1,23 @@
+body {
+  margin: 15px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.fc-prev-button,
+.fc-next-button {
+  height: 38px;
+}
+
+.toast {
+  display: none;
+}
+
+.toast .show {
+  display: block;
+}

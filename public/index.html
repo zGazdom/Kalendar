@@ -1,0 +1,495 @@
+<html lang="en">
+  <head>
+    <title>Kalendar</title>
+    <meta charset="utf-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13.1/css/all.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-easy-loading@2.0.0-rc.2/dist/jquery.loading.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/jquery-easy-loading@2.0.0-rc.2/src/loading.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-serialize-object/2.5.0/jquery.serialize-object.min.js"
+      integrity="sha512-Gn0tSSjkIGAkaZQWjx3Ctl/0dVJuTmjW/f9QyB302kFjU4uTNP4HtA32U2qXs/TRlEsK5CoEqMEMs7LnzLOBsA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+      integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css"
+      integrity="sha512-3JRrEUwaCkFUBLK1N8HehwQgu8e23jTH4np5NHOmQOobuC4ROQxFwFgBLTnhcnQRMs84muMh0PnnwXlPq5MGjg=="
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"
+      integrity="sha512-k6/Bkb8Fxf/c1Tkyl39yJwcOZ1P4cRrJu77p83zJjN2Z55prbFHxPs9vN7q3l3+tSMGPDdoH51AEU8Vgo1cgAA=="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js"></script>
+    <link rel="stylesheet" href="/main.css" />
+  </head>
+  <body>
+    <div id="calendar"></div>
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      class="toast"
+      data-delay="2000"
+      style="position: absolute; top: 1rem; right: 1rem"
+    >
+      <div class="toast-header">
+        <strong id="toastTitle" class="mr-auto"></strong>
+        <button
+          type="button"
+          class="ml-2 mb-1 close"
+          data-dismiss="toast"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="toastBody" class="toast-body"></div>
+    </div>
+    <div class="modal fade" id="scheduleModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="scheduleForm" novalidate>
+              <div class="form-row">
+                <div class="form-group col-md-6 validate">
+                  <label for="firstName">First Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="firstName"
+                    id="firstName"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your first name.
+                  </div>
+                </div>
+                <div class="form-group col-md-6 validate">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="lastName"
+                    id="lastName"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter your last name.
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6 validate">
+                  <label for="time">Time</label>
+                  <input
+                    type="text"
+                    class="form-control datetimepicker-input"
+                    name="time"
+                    id="time"
+                    aria-describedby="timeFeedback"
+                    data-toggle="datetimepicker"
+                    data-target="#time"
+                    required
+                  />
+                  <div id="timeFeedback" class="invalid-feedback">
+                    Please choose a time.
+                  </div>
+                </div>
+                <div class="form-group col-md-6 validate">
+                  <label for="service">Service</label>
+                  <select
+                    id="service"
+                    name="service"
+                    class="form-control"
+                    required
+                  >
+                    <option value="" disabled selected>Choose...</option>
+                    <option value="haircut">Haircut</option>
+                    <option value="shaving">Shaving</option>
+                    <option value="both">Haircut & Shaving</option>
+                  </select>
+                  <div class="invalid-feedback">Please choose a service.</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                  class="form-control"
+                  name="description"
+                  id="description"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button form="scheduleForm" type="submit" class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="eventModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div id="eventFirstName" class="col-md-6">
+                <h5>First name</h5>
+                <p></p>
+              </div>
+              <div id="eventLastName" class="col-md-6">
+                <h5>Last Name</h5>
+                <p></p>
+              </div>
+            </div>
+            <div class="row">
+              <div id="eventTime" class="col-md-6">
+                <h5>Time</h5>
+                <p></p>
+              </div>
+              <div id="eventService" class="col-md-6">
+                <h5>Service</h5>
+                <p></p>
+              </div>
+            </div>
+            <div id="eventDescription">
+              <h5>Description</h5>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.addEventListener(
+        'load',
+        () => {
+          const validationGroups = $('.validate');
+
+          $('#scheduleForm').on('submit', function (e) {
+            e.preventDefault();
+
+            $('#timeFeedback').html('Please choose a time.');
+
+            if ($(this)[0].checkValidity()) {
+              const values = $(this).serializeObject();
+              const {
+                firstName,
+                lastName,
+                time: timeStr,
+                service,
+                description,
+              } = values;
+              const date = $('#scheduleModal .modal-title').val();
+
+              const [time, modifier] = timeStr.split(' ');
+              let [hours, minutes] = time.split(':');
+
+              if (hours === '12') {
+                hours = '00';
+              }
+
+              if (modifier === 'PM') {
+                hours = parseInt(hours, 10) + 12;
+              }
+
+              const convertedTime = `${hours}:${minutes}`;
+              const dateTime = moment(
+                `${date} ${convertedTime}`,
+                'YYYY-MM-DD HH:mm:ss',
+              ).format();
+
+              axios
+                .post('/schedule/new', {
+                  firstName,
+                  lastName,
+                  dateTime,
+                  service,
+                  description,
+                  createdAt: dateTime,
+                })
+                .then((res) => {
+                  const response = res.data;
+                  const error = response.error;
+
+                  if (error?.field === 'dateTime') {
+                    $('#time').addClass('is-invalid');
+                    $('#timeFeedback').html(error.message);
+
+                    return;
+                  }
+
+                  const toastTitle = $('#toastTitle');
+                  const toastBody = $('#toastBody');
+                  const toast = $('.toast');
+
+                  if (error) {
+                    toastTitle.html('Unexpected Error!');
+                    toastBody.html(
+                      'An unexpected error occurred. Please try again.',
+                    );
+                    toast.toast('show');
+
+                    return;
+                  }
+
+                  document.dispatchEvent(new Event('schedule'));
+
+                  $('#scheduleModal').modal('hide');
+                  toastTitle.html('Scheduled!');
+                  toastBody.html('Scheduled successfully! See you soon!');
+                  toast.toast('show');
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }
+
+            for (let i = 0; i < validationGroups.length; i++) {
+              const invalidGroups =
+                validationGroups[i].querySelectorAll(':invalid');
+
+              for (let j = 0; j < invalidGroups.length; j++) {
+                const invalidGroup = invalidGroups[j];
+
+                invalidGroup.classList.add('is-invalid');
+                invalidGroup.addEventListener(
+                  'input',
+                  (e) => e.target.classList.remove('is-invalid'),
+                  { once: true },
+                );
+
+                if (invalidGroup.classList.contains('datetimepicker-input')) {
+                  $(`#${invalidGroup.getAttribute('id')}`).on(
+                    'change.datetimepicker',
+                    () => {
+                      invalidGroup.classList.remove('is-invalid');
+                    },
+                  );
+                }
+              }
+            }
+          });
+        },
+        false,
+      );
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const calendarEl = document.getElementById('calendar');
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          themeSystem: 'bootstrap',
+          initialView: 'dayGridMonth',
+          viewDisplay: function (view) {
+            const now = new Date();
+            const end = new Date();
+            end.setMonth(now.getMonth() + 11);
+
+            const cal_date_string =
+              view.start.getMonth() + '/' + view.start.getFullYear();
+            const cur_date_string = now.getMonth() + '/' + now.getFullYear();
+            const end_date_string = end.getMonth() + '/' + end.getFullYear();
+
+            if (cal_date_string === cur_date_string) {
+              jQuery('.fc-button-prev').addClass('fc-state-disabled');
+            } else {
+              jQuery('.fc-button-prev').removeClass('fc-state-disabled');
+            }
+
+            if (end_date_string === cal_date_string) {
+              jQuery('.fc-button-next').addClass('fc-state-disabled');
+            } else {
+              jQuery('.fc-button-next').removeClass('fc-state-disabled');
+            }
+          },
+          dateClick: function (info) {
+            const validationGroups = $('#scheduleForm .validate .is-invalid');
+            const formControls = $('#scheduleForm .form-control');
+            const date = moment(info.dateStr).format('MMMM D, YYYY');
+            const today = moment().format('MMMM D, YYYY');
+
+            if (date >= today) {
+              $('#scheduleModal .modal-title')
+                .html(`Schedule for ${date}`)
+                .val(info.dateStr);
+              $('#time').datetimepicker({
+                format: 'LT',
+                stepping: 30,
+              });
+
+              for (let i = 0; i < validationGroups.length; i++) {
+                validationGroups[i].classList.remove('is-invalid');
+              }
+
+              for (let i = 0; i < formControls.length; i++) {
+                formControls[i].value = '';
+              }
+
+              $('#scheduleModal').modal('show');
+            }
+          },
+          events: function (info, successCallback, failureCallback) {
+            axios
+              .get('/schedule')
+              .then((res) => {
+                const { schedule } = res?.data;
+                successCallback([
+                  ...schedule.map((event) => ({
+                    title: `${event.firstName} ${event.lastName}`,
+                    start: event.dateTime,
+                    end: new Date(
+                      new Date(event.dateTime).getTime() + 30 * 60000,
+                    ).toISOString(),
+                    firstName: event.firstName,
+                    lastName: event.lastName,
+                    dateTime: event.dateTime,
+                    service: event.service,
+                    description: event.description,
+                  })),
+                ]);
+              })
+              .catch((err) => {
+                failureCallback(err);
+              });
+          },
+          eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: 'long',
+          },
+          eventClick: function (info) {
+            const { firstName, lastName, dateTime, service, description } =
+              info.event.extendedProps;
+            const date = moment(dateTime).format('MMMM D, YYYY');
+            const time = moment(dateTime).format('h:mm A');
+
+            $('#eventModal .modal-title').html(
+              `Appointment for ${date} at ${time}`,
+            );
+
+            $('#eventFirstName p').html(firstName);
+            $('#eventLastName p').html(lastName);
+            $('#eventTime p').html(`${date} at ${time}`);
+            $('#eventService p').html(
+              service === 'both'
+                ? 'Haircut & Shaving'
+                : service.charAt(0).toUpperCase() + service.slice(1),
+            );
+
+            if (description) {
+              $('#eventDescription').removeClass('d-none');
+              $('#eventDescription p').html(description);
+            } else {
+              $('#eventDescription').addClass('d-none');
+            }
+
+            $('#eventModal').modal('show');
+          },
+          loading: function (isLoading) {
+            const calendar = $('#calendar');
+
+            if (isLoading) {
+              calendar.loading('start');
+            } else {
+              calendar.loading('stop');
+            }
+          },
+        });
+        calendar.render();
+
+        document.addEventListener('schedule', async () => {
+          schedule = await axios.get('/schedule');
+          events = [
+            ...schedule?.data.schedule.map((event) => ({
+              title: `${event.firstName} ${event.lastName}`,
+              start: event.dateTime,
+              end: new Date(
+                new Date(event.dateTime).getTime() + 30 * 60000,
+              ).toISOString(),
+              firstName: event.firstName,
+              lastName: event.lastName,
+              dateTime: event.dateTime,
+              service: event.service,
+              description: event.description,
+            })),
+          ];
+
+          calendar.add;
+          calendar.refetchEvents();
+        });
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
